@@ -15,25 +15,19 @@ export class NinjasController {
     }
     @Get(':id')
     getOneNinja(@Param('id')id:string){
-    return { id };
+    return this.ninjaService.getNinja(+id);// using the service and the getninja meth casing the id into a number
+                                           // becasue the params are string and in the service is a number 
     }
     @Post()
     createNinja(@Body() createNinjaDto: CreateNinjaDto){
-        return{
-            name: createNinjaDto.name,
-        }
+        return this.ninjaService.createNinja(createNinjaDto)
     }
     @Put(':id')
     updateNinja(@Param('id') id: string, @Body() updateNinjaDto: UpdateNinjaDto){
-        return{
-            id,
-            name:updateNinjaDto
-        }
+        return this.ninjaService.updateNinja(+id,updateNinjaDto)
     }
     @Delete(':id')
     removeNinja(@Param('id') id:string){
-        return{
-            id,
-        }
+        return this.ninjaService.removeNinja(+id)
     }
 }
