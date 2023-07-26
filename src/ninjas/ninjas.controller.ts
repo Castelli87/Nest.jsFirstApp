@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Put, Query, Delete, HttpException, HttpStatus, } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put, Query, Delete, HttpException, HttpStatus, ParseIntPipe, ValidationPipe, } from '@nestjs/common';
 import { CreateNinjaDto } from './dto/create-Ninja.dto';
 import { UpdateNinjaDto } from './dto/update-Ninja.dto';
 import { NinjasService } from './ninjas.service';
@@ -14,11 +14,10 @@ export class NinjasController {
         return this.ninjaService.getNinjas(weapon)
     }
     @Get(':id')
-    getOneNinja(@Param('id') id: string) {
+    getOneNinja(@Param('id',ParseIntPipe) id: number) { // using this Pipe we can transform the id that is a string into a number
         try {
 
-            return this.ninjaService.getNinja(+id);// using the service and the getninja meth casing the id into a number
-            // becasue the params are string and in the service is a number 
+            return this.ninjaService.getNinja(id);// using the service and the getninja methods 
         } catch (err) {
             throw new HttpException({ status: HttpStatus.NOT_FOUND , error: 'Ninja not Found' }, HttpStatus.FORBIDDEN, {
                 cause: err
@@ -26,7 +25,7 @@ export class NinjasController {
         }
     }
     @Post()
-    createNinja(@Body() createNinjaDto: CreateNinjaDto) {
+    createNinja(@Body(new ValidationPipe()) createNinjaDto: CreateNinjaDto) {
         return this.ninjaService.createNinja(createNinjaDto)
     }
     @Put(':id')
